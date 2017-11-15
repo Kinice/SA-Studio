@@ -43,7 +43,7 @@ git与网盘的不同点之一在于：git管理的是**文件的修改**，是�
 
 当你在本地修改文件之后，执行`git status`就会看到一片红色的文件名：
 
-![](/Users/sunzhaopeng/Desktop/WechatIMG19.jpeg)
+![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/WechatIMG19.jpeg)
 
 如上图，有三个文件的名字是红的，分成了两个部分：
 
@@ -56,7 +56,7 @@ git与网盘的不同点之一在于：git管理的是**文件的修改**，是�
 
 从此我们可以看出，git对于文件是这样处理的：首先，对于新文件，提交过一次之后，git就会跟踪这个文件。每当文件内容进行修改，git就会**按行**分析出这个文件修改了哪些行。对于这些修改，用`git diff <filename>`就可以查看到：
 
-![](/Users/sunzhaopeng/Desktop/WechatIMG20.jpeg)
+![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/WechatIMG20.jpeg)
 
 对于程序员来说，写代码的量上来之后，或者你修改的文件多了以后，可能就会出现忘掉修改了哪些内容之类的问题。git就会帮我们跟踪这些文件，把你的修改以简单明了的方式展现出来。对于我这么个前端来说，diff让我减少了一大堆语法错误（逃。
 
@@ -73,7 +73,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 如图所示：
 
-![](/Users/sunzhaopeng/Desktop/WechatIMG4119.jpeg)
+![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/WechatIMG4119.jpeg)
 
 好，就根据此图，归结一下我们一次工作并提交代码的过程吧：
 
@@ -84,7 +84,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 如图所示：
 
-![](/Users/sunzhaopeng/Desktop/WechatIMG21.jpeg)
+![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/WechatIMG21.jpeg)
 
 接下来再讲一讲具体各个区域代表了什么：
 
@@ -109,7 +109,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 在用git提交的过程中，每当工作区发生了修改，`git status`就会显示你修改的文件为红色，代表这些文件发生过修改，上面提到了，这些文件在git里叫做“Changes not staged for commit”。而当你执行`git add [filepath]`之后，这些文件就变成了绿色，如图：
 
-![](/Users/sunzhaopeng/Desktop/WechatIMG22.jpeg)
+![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/WechatIMG22.jpeg)
 
 绿色的文件git称之为“Changes to be committed”，就是将要被提交的修改。也就是说，**暂存区会集中一批修改**，统一提交成一个commit。
 
@@ -119,7 +119,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 还有很多人不理解暂存区和工作区的关系，有一种情况可以加深对其的理解：当你把一个东西add到暂存区之后，再次从工作区修改这个文件，会出现这样的情况：
 
-![](/Users/sunzhaopeng/Desktop/WechatIMG23.jpeg)
+![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/WechatIMG23.jpeg)
 
 这说明暂存区和工作区是分开的。暂存区保存的是**当你add时的修改**，而你再次修改工作区时，git又会检测到你的修改跟暂存区中的不一样，就出现了未暂存和已暂存同时出现的情况，这时继续`git add`，暂存区中的修改就会集中这两次的修改内容，然后commit就会把两次修改提交成同一个了。
 
