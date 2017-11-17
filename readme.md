@@ -111,13 +111,13 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 暂存区的概念虽然在所有git教程中都是重点提到的内容，但是实际工作中大部分同学对此都是懵懵懂懂。我认为，这是因为暂存区的英文翻译导致的╮(╯▽╰)╭。
 
-暂存区的英文名称叫**stage**。这个stage呢，既是个名词也是个动词，但是都没有“存储”的意思，这是很多人疑惑的地方。我们从暂存区的作用来看看stage到底是什么意思。
+暂存区的英文名称叫**stage**。这个stage呢，既是个名词也是个动词，但是都没有「存储」的意思，这是很多人疑惑的地方。我们从暂存区的作用来看看stage到底是什么意思。
 
-在用git提交的过程中，每当工作区发生了修改，`git status`就会显示你修改的文件为红色，代表这些文件发生过修改，上面提到了，这些文件在git里叫做“Changes not staged for commit”(git status可以显示工作区修改、暂存区文件以及你本地分支相对于远程分支的情况)。而当你执行`git add <filepath>`之后，这些文件就变成了绿色，如图：
+在用git提交的过程中，每当工作区发生了修改，`git status`就会显示你修改的文件为红色，代表这些文件发生过修改，上面提到了，这些文件在git里叫做「Changes not staged for commit」(git status可以显示工作区修改、暂存区文件以及你本地分支相对于远程分支的情况)。而当你执行`git add <filepath>`之后，这些文件就变成了绿色，如图：
 
 ![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/WechatIMG22.jpeg)
 
-绿色的文件git称之为“Changes to be committed”，就是将要被提交的修改。也就是说，**暂存区会集中一批修改**，统一提交成一个commit。
+绿色的文件git称之为「Changes to be committed」，就是将要被提交的修改。也就是说，**暂存区会集中一批修改**，统一提交成一个commit。
 
 举个例子，git的提交流程就像是一个生产流水线：你先咔咔生产一批产品（修改文件），然后把生产好的文件放到一个存放的地方（git add到暂存区），当你觉得这批货不管是质量还是数量都OK了，就把这批货打包装箱（git commit）。
 
@@ -131,19 +131,19 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 综上所述，暂存区*stage*的英文含义像是一个阶段性的平台，用来保存你即将打包成一次commit的提交们。从英文含义角度理解，这个词儿其实还是挺生动形象的。（emmmmmm......）
 
-而暂存区的修改是如何同步到文件区呢？ 在说暂存区时已经提到过，答案就是`git checkout <filename>`啦。checkout就是“检出”的意思，当出现上面图中暂存区和工作区都有修改的时候，checkout会从暂存区“检出”修改到工作区中，使工作区与暂存区同步（关于checkout其他用法后面再说）。
+而暂存区的修改是如何同步到文件区呢？ 在说暂存区时已经提到过，答案就是`git checkout <filename>`啦。checkout就是「检出」的意思，当出现上面图中暂存区和工作区都有修改的时候，checkout会从暂存区「检出」修改到工作区中，使工作区与暂存区同步（关于checkout其他用法后面再说）。
 
-最后，已经在暂存区中的修改如何去掉，git已经提示了：“`git reset HEAD <file>...`”。观感上，就是把暂存区中的某些修改从中删去了，实际上，这个**git reset的操作是从版本库同步代码到暂存区中**的意思。也就是说，在这里的`git reset`完成了使用版本库的代码修改暂存区的操作。
+最后，已经在暂存区中的修改如何去掉，git已经提示了：「`git reset HEAD <file>...`」。观感上，就是把暂存区中的某些修改从中删去了，实际上，这个**git reset的操作是从版本库同步代码到暂存区中**的意思。也就是说，在这里的`git reset`完成了使用版本库的代码修改暂存区的操作。
 
 *涉及操作：*`git status`, `git add`, `git commit`, `git checkout`, `git reset HEAD <file>`
 
 ### 版本库
 
-版本库，也就是git的分支库，其实是git最核心的部分。当我们提到git时，其实就是在说git分支。如果你是一个个人开发者，你的项目只有一个人在开发，永远只有一个master分支，那么你可能永远接触不到分支的内容，你对git的了解会永远停留在“了解”这一阶段。
+版本库，也就是git的分支库，其实是git最核心的部分。当我们提到git时，其实就是在说git分支。如果你是一个个人开发者，你的项目只有一个人在开发，永远只有一个master分支，那么你可能永远接触不到分支的内容，你对git的了解会永远停留在「了解」这一阶段。
 
 #### 版本库的基本组成
 
-版本库这个名称来源，就是它管理的是一个个“版本”。
+版本库这个名称来源，就是它管理的是一个个「版本」。
 
 版本库是由分支组成的，分支则是由commit组成的。**commit就是版本库的基本单位**。在git中，每个都commit有一个独一无二的「commit id」，也就是说通过这个id你可以精确定位到某一个commit上。所以，为什么git要求每次commit的时候必须为commit添加明确的commit message，并且要专门开辟出stage暂存区来管理每一次commit的内容（svn就没有暂存区），就是为了能够随时进行commit（代码版本）层面的操作，明确每一次commit，保证出现问题时能快速定位，以及完成版本回退等操作。
 
@@ -192,11 +192,29 @@ master分支其实是一个**指针**，它指向一个commit，代表了**在�
 
 #### 合并分支
 
-此时的dev分支与master分支的进度就不一样了，所以需要将dev分支与master分支同步。这里需要的就是合并分支的操作，应该都知道是`git merge`或者`git rebase`。
+此时的dev分支与master分支的进度就不一样了，所以需要将dev分支与master分支同步。这里需要的就是合并分支的操作，大家应该都知道用`git merge`或者`git rebase`。
 
 ##### git merge
 
-当出现我们上面图中的那种情况时，时间线只有一条，dev分支只不过是落后master分支而已，此时我们在dev分支上执行`git merge maseter`，
+当出现我们上面图中的那种情况时，时间线只有一条，dev分支只不过是落后master分支而已。此时我们在dev分支上执行`git merge maseter`时，git就仅仅会把dev分支指针移动到master分支所在的位置，就变成这样了：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG27.jpeg)
+
+这种merge的方式叫做「fast-forward」，也是git默认的merge方式。
+
+如果情况改变了，举个例子：我们在开发过程中，一直使用的是master分支，这时出了一个很严重的bug，我们就需要建立一个叫topic的分支来处理这个bug，但主要的功能工期又不能拖，所以master分支与topic分支就同时向前推进，此时时间线如图所示(此图出自git自己的帮助文件，使用命令`git help merge`即可看到。想看其他命令的帮助就`git help <command>`即可)：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG31.jpeg)
+
+这时候，topic上的bug修改完毕，需要合并回master分支，需要的操作为：切换到master分支`git checkout master`，合并dev`git merge dev`。
+
+注意，这时候的这两条分支是真正的「分支」了，他们在时间线上岔开了，各自分支都有自己独有的东西。因为此时的topic分支的末端并不在master分支的父端，需要把不同的修改同步起来，单纯的指针移动不能完成这一步，fast-forward方式也就不可能实现了。
+
+这时，**git便会将两个分支不同的地方取出，合并成一个commit，然后把master指针指向这个新的commit**（就是在master上生成了一次commit）。这样，topic分支上的修改就同步到master分支上了。此时分支情况如图：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG32.jpeg)
+
+BTW，能够进行fast-forward的merge情况下，也可以通过增加`--no-ff`命令来强制不使用fast-forward模式。
 
 
 
