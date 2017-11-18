@@ -196,7 +196,9 @@ master分支其实是一个**指针**，它指向一个commit，代表了**在�
 
 ##### git merge
 
-当出现我们上面图中的那种情况时，时间线只有一条，dev分支只不过是落后master分支而已。此时我们在dev分支上执行`git merge maseter`时，git就仅仅会把dev分支指针移动到master分支所在的位置，就变成这样了：
+merge，即「合并」。
+
+当出现我们上面图中的那种情况时，时间线只有一条，dev分支只不过是落后master分支而已。此时我们在dev分支上执行`git merge maseter`时，git就仅仅会把dev分支指针移动到master分支所在的位置，假装合并了，就变成了这样：
 
 ![](/Users/sunzhaopeng/Desktop/WechatIMG27.jpeg)
 
@@ -214,10 +216,91 @@ master分支其实是一个**指针**，它指向一个commit，代表了**在�
 
 ![](/Users/sunzhaopeng/Desktop/WechatIMG32.jpeg)
 
-BTW，能够进行fast-forward的merge情况下，也可以通过增加`--no-ff`命令来强制不使用fast-forward模式。
+BTW，能够进行fast-forward的merge情况下，也可以通过增加`--no-ff`命令来强制不使用fast-forward模式。假如还是回到我们master-dev两个分支的例子，master领先于dev分支：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG30.jpeg)
+
+这时我们不用fast-forward，在落后的dev分支上执行`git merge master --no-ff`，git会在dev上强行创建一个commit，把master分支上不同于dev的修改加进去，分支线就会变成这种诡异的样子：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG34.jpeg)
+
+（本手残渣画图实在是不好看，就直接用GUI工具source tree上的情况截图了）
+
+底层上，git会把将要合并的两个分支的各个commit快照进行差异比较，求出它们之间的最长公共子序列，并把公共子序列从中去掉，得出各自存在两个分支中的不同修改，并将其合并成一个commit放在当前分支的顶端。
+
+这里仅仅说明一点原理，具体实现方式与算法本人也只是懂一点皮毛，只要明白fast-forward与不使用的情况下merge，分支会产生什么样的情况，用来工作就没有任何问题了。
+
+除了`--no-ff`，merge还有另一种合并的方式：`--squash`。这种方法在符合fast-forward的情况下依然会执行fast-forward方式，不会有任何改变。但当遇到如下情况时：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG31.jpeg)
+
+假设我们要将topic合并到master上来，**squash方式会集中topic的「A、B、C」三次commit中的修改合并，并添加到暂存区中**。这时master分支与topic分支不会有任何的变动，只不过暂存区中会被添加topic上修改的集合（暂存区=A+B+C）。这时我们就可以查看暂存区中的内容是不是符合一次提交，之后commit就可以了。`git help merge`里是这么描述的：「create a single commit instead of doing a merge」，结合上面的讲解就可以理解squash的意思了吧。
+
+*关于解决冲突：*fast-forward中是没有冲突的（不明白为啥没冲突的面壁思过）。而在其他情况时，如果两个分支同时有对同一个文件（行）的修改，就会产生冲突。这时git会在产生冲突的文件里写一堆这样的东西：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG36.jpeg)
+
+上面的「<<<<<<<< HEAD」直到「========」的部分，就是当前分支的修改（看到HEAD就知道是指向当前分支的指针了）。而「========」到下面的「>>>>>>> dev」的部分自然就是dev分支合并过来的修改啦。这时需要你仔细对比冲突，如果跟同事合作的话就要商量好，然后把「<<<<< HEAD ===== >>>>> dev」之类git给你加上的东西和不需要的修改部分删掉。接下来`git status`就会看到下面的提示：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG37.jpeg)
+
+上面绿的的东西自然就在暂存区了，这些代表dev分支上并不冲突的部分。下面的红色文件就代表你冲突的文件，当你修改之后需要走一遍add -> commit的流程（这个commit可以不指定commit message），也可以直接执行`git commit -a`，就完成merge创建新commit的过程了。
 
 
+*涉及操作：*`git merge <branch>`, `git merge <branch> --no-ff`, `git merge <branch> --squash`, `git checkout <branch>`, `git help <command>`
 
+##### git rebase
+
+除了merge，git还有一种分支合并的方式，叫做git rebase。rebase，就是「re」与「base」结合，官方译名「变基」（咖喱gaygayʕ •ᴥ•ʔ）。这个「变基」的含义从字面上确实不是很好理解，先来看一下rebase示例：
+
+回到我们master-dev两个分支的例子，master领先于dev分支：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG30.jpeg)
+
+这时候我们在dev分支上执行`git rebase master`，master便与dev合并了，如图所示：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG27.jpeg)
+
+此时你内心OS：这不是跟fast-forward模式下的merge一样么？莫急莫急，我们再看一下出现这样情况下的分支（作者偷懒拿前面图糊弄了嘿嘿嘿）：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG31.jpeg)
+
+不着急解释原理，我们先看看**在topic上**执行`git rebase master`的结果（就是将master合并到topic上）：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG35.jpeg)
+
+看图得知：master上的「F」「G」两次提交，变成了**topic分支的父节点**，整个分支又重新合成为一条时间线。在本例中，你可以想象「biu」的一下把topic分支拔下来，然后「pu」的一下把它插到了master的顶端（大雾）。
+
+当然，git肯定不是像上面那样「biu」「pu」地操作分支的。
+
+git help rebase中是这样描述`git rebase`的：「git-rebase - Reapply commits on top of another base tip」，翻译一下，就是「将你的commit们在另一个基准点上重新应用」。注意这里的「reapply」，git并不会直接移动commit本身，而是会**为需要rebase的分支上的commit分别创建一个patch「补丁」，然后将patch在基准点上依次应用，重建出一条时间线**。
+
+可以参照上面的两张图梳理一下流程：当我们在topic分支上执行`git rebase master`时，代表了我们要将我们当前的分支（topic）应用到指定的master分支上。此时topic与master的共同父节点是「E」，topic的特有commit是「A」「B」「C」，git就会按照时间点，分别创建「A」「B」「C」的patch「A'」「B'」「C'」，**然后将topic分支的基准点设置为master分支的顶点「G」**（「变基」了！），依次将「A'」「B'」「C'」Apply到「G」上。
+
+现在是不是理解「rebase变基」是什么意思了！
+
+既然rebase做为「变基」，自然也可以任意指定把要rebase的分支「pu」到哪一个「基」上（大雾）。继续拿刚才的topic与master举例子：你想把master上的「F」作为基准点，就要使用`git rebase master --onto <commit id>`这个命令（加了--onto [commit id]），完成rebase之后时间线会变成这个样子：
+
+![](/Users/sunzhaopeng/Desktop/WechatIMG38.jpeg)
+
+虽然略显诡异，但这样的操作在很多时候是很有用的。作者在做项目的时候，单独给某一个分支加过一个commit，导致每次rebase都会对其产生一堆冲突，用`git rebase --onto`操作就可以单独把那个提交分离出来，要杀要剐随你便。
+
+*关于解决冲突：*rebase产生的冲突与merge其实是相同的。但由于rebase操作会按照patch一个个打补丁上去，每打一个都有可能会产生冲突，跟merge的产生一个commit这种一次性操作不一样，解决冲突之后也就不是提交commit，而是`git add <file>`之后执行`git rebase --continue`。也就是「打一个补丁，解决一次冲突，然后继续下一个补丁」的过程。如果你不耐烦了，也可以`git rebase --abort`直接不进行rebase了。
+
+*涉及操作：*`git rebase <branch>`, `git rebase <branch> --onto <commit id>`, `git rebase --continue`, `git rebase --abort`
+
+##### 关于分支处理策略的选择
+
+上面讲了好多关于分支的东西，可能会让人困惑：分支涉及到的东西这么多，本身又复杂，多分支处理也复杂，应该怎样利用分支才好？分支合并的策略选哪一种呢？这里我说一下个人的见解：
+
+首先，git保存的是修改这一点，可以很清楚的让我们知道代码发生了哪些改变。在这样的情况下，我们利用commit时间线就可以明确地区分哪个人在什么时间做了什么事情，也就是给了你「查看历史」与「修改历史」的权力，这对一个软件项目来说是至关重要的。
+
+有关git多个分支的设计，其实是非常巧妙的。多个分支解决了以代码本身不同版本、不同功能或不同目的的开发方向（比如开发新功能或改bug，又暂时不想修改主要版本）开发时的代码版本管理问题，能够很方便地管理工作区的文件内容。所以，我对多分支系统利用的理解是这样的：
+
+* 分支是需要充分利用的。首先要确定一个master分支，作为这个项目最终上线的版本，要保证合并到master分支上的代码都是确定无误的、测试通过的。
+* 在开发过程中，可以使用一个development分支来开发，用其部署测试环境，使这个分支成为可以随意修改的分支，增加开发的灵活度。
+* 在master或者dev分支出现问题，或者要分头行动时，为每个分支在合适的父节点上创建新的功能分支或bug分支来处理这些问题，可以保证主要的代码不会出错，就算是开发出问题，直接删除该分支便是，基本不用涉及到文件层面的修改。
+* 所以，对工作区的修改应该仅限于增加新内容和修复bug之类的操作，其他的都应该交给git去处理，保证版本树是一条路，复杂的功能删除也不用一行一行找。
 
 
 
