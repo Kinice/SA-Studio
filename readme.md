@@ -31,7 +31,7 @@ git已经是一个非常普及且常用的代码管理工具，算是程序员�
 
 所以我想从git工作区划分开始，解释一下平时常用的一些git命令的真正含义，不过并不会太过深入的解释git的一些偏门内容。希望看过这篇文章的朋友能对git本身有一定的认识，知道用不同的命令时，git产生了哪些改变，做到使用命令时心里有数，更好的利用好git这个优秀的工具。
 
-阅读本文需要知道git是什么东西，以及一点简单的命令使用。萌新请看这里：[廖雪峰大大的git教程](https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)。
+**本文不是给纯萌新看的教程。**阅读本文需要知道git是什么东西，以及一点简单的命令使用。萌新请看这里：[廖雪峰大大的git教程](https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)。
 
 本文会把相对于git各个区域或者操作涉及到的git命令总结在段尾，可以结合段中内容回想涉及到的命令在这里完成了什么作用，最后再综合思考命令的作用。
 
@@ -47,7 +47,7 @@ git与网盘的不同点之一在于：git管理的是**文件的修改**，是�
 
 当你在本地修改文件之后，执行`git status`就会看到一片红色的文件名：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/blogimgs/WechatIMG19.jpeg)
+![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG19.jpeg)
 
 如上图，有三个文件的名字是红的，分成了两个部分：
 
@@ -157,7 +157,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 在新建git仓库时，git会自动给你创建一条分支，叫master，你之后所做的所有操作都是在这个master分支上操作。不过，**并不要把一个分支就理解为是这样的一条时间线**。这里可能有点绕，也是git中最抽象的一个点之一。就是：
 
-master分支其实是一个**指针**，它指向一个commit，代表了**在这条时间线上，master指针指向的那个commit时间点的代码状态**。可能对于指针概念由基础的同学会更好理解一点。如下图：
+master分支其实是一个**指针**，它指向一个commit，代表了**在这条时间线上，master指针指向的那个commit时间点的代码状态**。可能对于指针概念有基础的同学会更好理解一点。如下图：
 
 ![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG26.jpeg)
 
@@ -285,7 +285,7 @@ git help rebase中是这样描述`git rebase`的：「git-rebase - Reapply commi
 
 虽然略显诡异，但这样的操作在很多时候是很有用的。作者在做项目的时候，单独给某一个分支加过一个commit，导致每次rebase都会对其产生一堆冲突，用`git rebase --onto`操作就可以单独把那个提交分离出来，要杀要剐随你便。
 
-*关于解决冲突：*rebase产生的冲突与merge其实是相同的。但由于rebase操作会按照patch一个个打补丁上去，每打一个都有可能会产生冲突，跟merge的产生一个commit这种一次性操作不一样，解决冲突之后也就不是提交commit，而是`git add <file>`之后执行`git rebase --continue`。也就是「打一个补丁，解决一次冲突，然后继续下一个补丁」的过程。如果你不耐烦了，也可以`git rebase --abort`直接不进行rebase了。
+*关于解决冲突：* rebase产生的冲突与merge其实是相同的。但由于rebase操作会按照patch一个个打补丁上去，每打一个都有可能会产生冲突，跟merge的产生一个commit这种一次性操作不一样，解决冲突之后也就不是提交commit，而是`git add <file>`之后执行`git rebase --continue`。也就是「打一个补丁，解决一次冲突，然后继续下一个补丁」的过程。如果你不耐烦了，也可以`git rebase --abort`直接不进行rebase了。
 
 *涉及操作：*`git rebase <branch>`, `git rebase <branch> --onto <commit id>`, `git rebase --continue`, `git rebase --abort`
 
@@ -303,4 +303,20 @@ git help rebase中是这样描述`git rebase`的：「git-rebase - Reapply commi
 * 所以，对工作区的修改应该仅限于增加新内容和修复bug之类的操作，其他的都应该交给git去处理，保证版本树是一条路，复杂的功能删除也不用一行一行找。
 * 当某个分支的某些commit出现问题时，可以先将没有问题的部分建立分支保存起来，保证那些内容不会出问题。
 
-有关git代码合并策略的选择，虽然git提供了非常丰富的方法，**但一个team使用的方法应该固定成同一个**，这样能避免很多混乱。比如我们团队固定使用rebase方式合并代码，保持时间线清晰，通过commit信息来识别提交路线。而使用merge方法时，
+有关git代码合并策略的选择，虽然git提供了非常丰富的方法，**但一个team使用的方法应该大体固定成同一个**，这样能避免很多混乱，然后**在适当的时机使用不同的策略**。在《Pro Git》这本书中总结的就很好，我摘下来总结下：
+
+>选择merge还是rebase取决于你对**commit历史时间线**的定义。
+>
+>有两种观点：第一种认为，commit历史应该显示的是**什么时候具体发生了什么事**，比如分支的创建与合并过程，有哪些分支，分别合并在了什么地方等等。另一种认为，commit历史应该显示的是**这个项目经历过的状态**，而不考虑具体的分支构建过程。
+>
+>每一个团队，每一个人都是不同的。git作为一个如此强大的工具提供给了你解决任何问题的思路，你就要考虑清楚你的团队到底需要什么。
+>
+>一个两全其美的方法就是：rebase你本地的修改，push到多人环境中时用merge。
+
+乱糟糟的时间线&&完整的分支结构 vs 清爽的一条线&&舍弃修改过程，看你团队取舍咯。
+
+### 远程库
+
+让git实现一个完整的闭环，最后一步就是建立一个git服务器，
+
+
