@@ -29,6 +29,8 @@
 
 git已经是一个非常普及且常用的代码管理工具，算是程序员标配之一。但近期面试了大约几十个3-5年前端工程师外加实习生，发现大多数的git水平都停留在add、commit、push、pull这个最简单的流程，只会用GUI，甚至一点都没接触过的也大有人在。
 
+重要的是，基本没有人知道**为什么要这么做**。
+
 所以我想从git工作区划分开始，解释一下平时常用的一些git命令的真正含义，不过并不会太过深入的解释git的一些偏门内容。希望看过这篇文章的朋友能对git本身有一定的认识，知道用不同的命令时，git产生了哪些改变，做到使用命令时心里有数，更好的利用好git这个优秀的工具。
 
 **本文不是给纯萌新看的教程。**阅读本文需要知道git是什么东西，以及一点简单的命令使用。萌新请看这里：[廖雪峰大大的git教程](https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)。
@@ -47,7 +49,7 @@ git与网盘的不同点之一在于：git管理的是**文件的修改**，是�
 
 当你在本地修改文件之后，执行`git status`就会看到一片红色的文件名：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG19.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG19.jpeg)
 
 如上图，有三个文件的名字是红的，分成了两个部分：
 
@@ -60,7 +62,7 @@ git与网盘的不同点之一在于：git管理的是**文件的修改**，是�
 
 从此我们可以看出，git对于文件是这样处理的：对于新文件，提交过一次之后，git就会跟踪这个文件。每当文件内容进行修改，git就会**按行**分析出这个文件修改了哪些行。对于这些修改，用`git diff <filename>`就可以查看到：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG20.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG20.jpeg)
 
 对于程序员来说，写代码的量上来之后，或者你修改的文件多了以后，可能就会出现忘掉修改了哪些内容之类的问题。git就会帮我们跟踪这些文件，把你的修改以简单明了的方式展现出来。对于我这么个前端来说，diff让我减少了一大堆语法错误（逃。
 
@@ -77,7 +79,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 如图所示：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG4119.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG4119.jpeg)
 
 好，就根据此图，归结一下我们一次工作并提交代码的过程吧：
 
@@ -88,7 +90,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 如图所示：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG21.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG21.jpeg)
 
 下面就是各个区域的具体解释。
 
@@ -115,7 +117,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 在用git提交的过程中，每当工作区发生了修改，`git status`就会显示你修改的文件为红色，代表这些文件发生过修改，上面提到了，这些文件在git里叫做「Changes not staged for commit」(git status可以显示工作区修改、暂存区文件以及你本地分支相对于远程分支的情况)。而当你执行`git add <filepath>`之后，这些文件就变成了绿色，如图：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG22.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG22.jpeg)
 
 绿色的文件git称之为「Changes to be committed」，就是将要被提交的修改。也就是说，**暂存区会集中一批修改**，统一提交成一个commit。
 
@@ -125,7 +127,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 还有很多人不理解暂存区和工作区的关系，有一种情况可以加深对其的理解：当你把一个文件的修改add到暂存区之后，再次从工作区修改这个文件，会出现这样的情况：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG23.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG23.jpeg)
 
 这说明暂存区和工作区是分开的。暂存区保存的是**当你add时修改的内容**，而你再次修改工作区时，git又会检测到你的修改跟暂存区中的不一样，就出现了未暂存和已暂存同时出现的情况，这时继续`git add`，暂存区中的修改就会集中这两次的修改内容，然后commit就会把两次修改提交成同一个了。
 
@@ -151,7 +153,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 简单的说，分支就是由commit串成的一条**时间线**，就是这样子的：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG25.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG25.jpeg)
 
 上面的每个圈圈都是一次commit。
 
@@ -159,7 +161,7 @@ git将我们的工作流程抽象成了几个区域，总结一下就是：
 
 master分支其实是一个**指针**，它指向一个commit，代表了**在这条时间线上，master指针指向的那个commit时间点的代码状态**。可能对于指针概念有基础的同学会更好理解一点。如下图：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG26.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG26.jpeg)
 
 当我们建立一个分支时，使用两种方式：
 
@@ -168,21 +170,21 @@ master分支其实是一个**指针**，它指向一个commit，代表了**在�
 
 这样子建立的分支指针会指向目前你所在的那个分支(master)，假如我们创建了一个分支叫dev，那么我们的时间线就变成了这个样子：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG27.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG27.jpeg)
 
 可以看到，时间线还是那条时间线，不过已经有两条分支同时存在了，只是这两条分支都指向同一个commit，所以两条分支内容完全相同，git也就只会指一下指针，不会对代码和时间线做任何操作。但是，抽象来看，你可以把这两条分支看作是两条线。
 
 而我们怎么确定哪一条分支是我们当前的分支呢？也是指针，不过是一个指向指针的指针，叫做HEAD。HEAD指针在git中算是个关键字，HEAD就是当前指向当前分支的指针的意思。我们只用`git branch dev`创建分支时，HEAD指针不会做改变，当前分支依然是master分支，当前状态如图所示：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG28.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG28.jpeg)
 
 当我们在当前这种状态下，将暂存区中的内容进行一次提交时，会将时间线向前推进，生成一个commit，然后把当前分支master指向最新的commit。如图所示：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG29.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG29.jpeg)
 
 当切换分支时，我们会使用`git checkout <branch name>`，将HEAD指针指向切换过去的那个分支名。我们是不是见到了老朋友checkout！在前面的暂存区我讲过，checkout作为**检出**操作是将暂存区中的内容同步到工作区的方法。这里的checkout依然是**检出**的意思，只不过检出的对象变成了**相应分支的文件**。其实我们可以把暂存区想象成一个分支，暂存区的内容就是commit的内容，这两种操作的意义就保持一致了，只不过检出分支时HEAD指针会移动。checkout文件**会修改工作区**。所以，执行`git checkout dev`后，分支状态就变成了这样：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG30.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG30.jpeg)
 
 而上面说过，checkout会修改工作区，所以你磁盘上的文件就变成了dev分支上那次commit时的样子。而在创建时提到的`git commit -b <branch name>`则同时完成了「创建分支」和「检出分支」两个操作，方便得很。
 
@@ -200,13 +202,13 @@ merge，即「合并」。
 
 当出现我们上面图中的那种情况时，时间线只有一条，dev分支只不过是落后master分支而已。此时我们在dev分支上执行`git merge maseter`时，git就仅仅会把dev分支指针移动到master分支所在的位置，假装合并了，就变成了这样：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG27.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG27.jpeg)
 
 这种merge的方式叫做「fast-forward」，也是git默认的merge方式。
 
 如果情况改变了，举个例子：我们在开发过程中，一直使用的是master分支，这时出了一个很严重的bug，我们就需要建立一个叫topic的分支来处理这个bug，但主要的功能工期又不能拖，所以master分支与topic分支就同时向前推进，此时时间线如图所示(此图出自git自己的帮助文件，使用命令`git help merge`即可看到。想看其他命令的帮助就`git help <command>`即可)：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG31.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG31.jpeg)
 
 这时候，topic上的bug修改完毕，需要合并回master分支，需要的操作为：切换到master分支`git checkout master`，合并dev`git merge dev`。
 
@@ -214,15 +216,15 @@ merge，即「合并」。
 
 这时，**git便会将两个分支不同的地方取出，合并成一个commit，然后把master指针指向这个新的commit**（就是在master上生成了一次commit）。这样，topic分支上的修改就同步到master分支上了。此时分支情况如图：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG32.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG32.jpeg)
 
 BTW，能够进行fast-forward的merge情况下，也可以通过增加`--no-ff`命令来强制不使用fast-forward模式。假如还是回到我们master-dev两个分支的例子，master领先于dev分支：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG30.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG30.jpeg)
 
 这时我们不用fast-forward，在落后的dev分支上执行`git merge master --no-ff`，git会在dev上强行创建一个commit，把master分支上不同于dev的修改加进去，分支线就会变成这种诡异的样子：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG34.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG34.jpeg)
 
 （本手残渣画图实在是不好看，就直接用GUI工具source tree上的情况截图了）
 
@@ -232,17 +234,17 @@ BTW，能够进行fast-forward的merge情况下，也可以通过增加`--no-ff`
 
 除了`--no-ff`，merge还有另一种合并的方式：`--squash`。这种方法在符合fast-forward的情况下依然会执行fast-forward方式，不会有任何改变。但当遇到如下情况时：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG31.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG31.jpeg)
 
 假设我们要将topic合并到master上来，**squash方式会集中topic的「A、B、C」三次commit中的修改合并，并添加到暂存区中**。这时master分支与topic分支不会有任何的变动，只不过暂存区中会被添加topic上修改的集合（暂存区=A+B+C）。这时我们就可以查看暂存区中的内容是不是符合一次提交，之后commit就可以了。`git help merge`里是这么描述的：「create a single commit instead of doing a merge」，结合上面的讲解就可以理解squash的意思了吧。
 
 *关于解决冲突：*fast-forward中是没有冲突的（不明白为啥没冲突的面壁思过）。而在其他情况时，如果两个分支同时有对同一个文件（行）的修改，就会产生冲突。这时git会在产生冲突的文件里写一堆这样的东西：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG36.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG36.jpeg)
 
 上面的「<<<<<<<< HEAD」直到「========」的部分，就是当前分支的修改（看到HEAD就知道是指向当前分支的指针了）。而「========」到下面的「>>>>>>> dev」的部分自然就是dev分支合并过来的修改啦。这时需要你仔细对比冲突，如果跟同事合作的话就要商量好，然后把「<<<<< HEAD ===== >>>>> dev」之类git给你加上的东西和不需要的修改部分删掉。接下来`git status`就会看到下面的提示：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG37.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG37.jpeg)
 
 上面绿的的东西自然就在暂存区了，这些代表dev分支上并不冲突的部分。下面的红色文件就代表你冲突的文件，当你修改之后需要走一遍add -> commit的流程（这个commit可以不指定commit message），也可以直接执行`git commit -a`，就完成merge创建新commit的过程了。
 
@@ -255,19 +257,19 @@ BTW，能够进行fast-forward的merge情况下，也可以通过增加`--no-ff`
 
 回到我们master-dev两个分支的例子，master领先于dev分支：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG30.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG30.jpeg)
 
 这时候我们在dev分支上执行`git rebase master`，master便与dev合并了，如图所示：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG27.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG27.jpeg)
 
 此时你内心OS：这不是跟fast-forward模式下的merge一样么？莫急莫急，我们再看一下出现这样情况下的分支（作者偷懒拿前面图糊弄了嘿嘿嘿）：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG31.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG31.jpeg)
 
 不着急解释原理，我们先看看**在topic上**执行`git rebase master`的结果（就是将master合并到topic上）：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG35.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG35.jpeg)
 
 看图得知：master上的「F」「G」两次提交，变成了**topic分支的父节点**，整个分支又重新合成为一条时间线。在本例中，你可以想象「biu」的一下把topic分支拔下来，然后「pu」的一下把它插到了master的顶端（大雾）。
 
@@ -281,7 +283,7 @@ git help rebase中是这样描述`git rebase`的：「git-rebase - Reapply commi
 
 既然rebase做为「变基」，自然也可以任意指定把要rebase的分支「pu」到哪一个「基」上（大雾）。继续拿刚才的topic与master举例子：你想把master上的「F」作为基准点，就要使用`git rebase master --onto <commit id>`这个命令（加了--onto [commit id]），完成rebase之后时间线会变成这个样子：
 
-![](https://github.com/Kinice/SA-Studio/blob/master/SunZhaopeng/blogimgs/WechatIMG38.jpeg)
+![](http://static.kinice.top/images/blogimgs/WechatIMG38.jpeg)
 
 虽然略显诡异，但这样的操作在很多时候是很有用的。作者在做项目的时候，单独给某一个分支加过一个commit，导致每次rebase都会对其产生一堆冲突，用`git rebase --onto`操作就可以单独把那个提交分离出来，要杀要剐随你便。
 
